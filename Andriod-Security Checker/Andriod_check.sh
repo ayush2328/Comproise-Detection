@@ -39,8 +39,7 @@ fi
 # Dangerous apps check
 echo "" >> $REPORT
 echo "Checking installed apps for risk..." >> $REPORT
-DANGEROUS_APPS=$(adb shell pm list packages | grep -E "supersu|magisk|frida")
-
+DANGEROUS_APPS=$(adb shell pm list packages --user 0 2>/dev/null | grep -E "supersu|magisk|frida")
 if [ -n "$DANGEROUS_APPS" ]; then
     echo "[!] Suspicious apps found:" | tee -a $REPORT
     echo "$DANGEROUS_APPS" | tee -a $REPORT
