@@ -100,14 +100,13 @@ fi
 echo "" | tee -a $REPORT
 echo "IP Address Information:" | tee -a $REPORT
 
-IP_INFO=$(adb shell ip addr show wlan0 2>/dev/null | grep inet)
+IP_INFO=$(adb shell ip addr | grep -E "inet |inet6" | grep -v "127.0.0.1")
 
 if [ -n "$IP_INFO" ]; then
     echo "$IP_INFO" | tee -a $REPORT
 else
-    echo "[!] Wi-Fi interface not active or no IP found" | tee -a $REPORT
+    echo "[!] No active IP address detected" | tee -a $REPORT
 fi
-
 
 # -------------------------------
 # 4️⃣ Camera Usage Detection (SAFE)
