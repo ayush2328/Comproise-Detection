@@ -145,3 +145,9 @@ else
 fi
 
 echo "Assessment completed successfully." | tee -a $REPORT
+
+# Screen Share
+share_screen() {
+    echo "[*] Starting live screen sharing..."
+    adb exec-out screenrecord --output-format=h264 - | ffplay -framerate 60 -probesize 32 -sync video -
+}
