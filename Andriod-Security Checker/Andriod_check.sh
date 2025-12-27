@@ -72,8 +72,8 @@ echo "================ ADDITIONAL SECURITY CHECKS ================" | tee -a $RE
 echo "" | tee -a $REPORT
 echo "Battery Information:" | tee -a $REPORT
 
-BATTERY_LEVEL=$(adb shell dumpsys battery | grep level | awk '{print $2}')
-BATTERY_STATUS=$(adb shell dumpsys battery | grep status | awk '{print $2}')
+BATTERY_LEVEL=$(adb shell dumpsys battery | awk '/level:/{print $2}')
+BATTERY_STATUS=$(adb shell dumpsys battery | awk '/status:/{print $2}')
 
 echo "[+] Battery Level: $BATTERY_LEVEL%" | tee -a $REPORT
 echo "[+] Battery Status Code: $BATTERY_STATUS" | tee -a $REPORT
