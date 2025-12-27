@@ -159,24 +159,30 @@ echo "3) Exit"
 echo "============================================="
 read -p "Choose an option: " CHOICE
 
-case $CHOICE in
-    1)
-        echo ""
-        echo "----- ANDROID SECURITY REPORT -----"
-        cat $REPORT
-        ;;
-    2)
-        share_screen
-        ;;
-    3)
-        echo "Exiting tool."
-        exit 0
-        ;;
-    *)
-        echo "Invalid option."
-        ;;
-esac
+while true; do
+    echo ""
+    echo "================ ACTION MENU ================"
+    echo "1) View security report"
+    echo "2) Share connected device screen (LIVE)"
+    echo "3) Exit"
+    echo "============================================="
+    read -p "Choose an option: " CHOICE
 
-
-
-# change the mode of file to be execute this shell file
+    case $CHOICE in
+        1)
+            echo ""
+            echo "----- ANDROID SECURITY REPORT -----"
+            cat $REPORT
+            ;;
+        2)
+            share_screen
+            ;;
+        3)
+            echo "Exiting tool."
+            exit 0
+            ;;
+        *)
+            echo "Invalid option."
+            ;;
+    esac
+done
