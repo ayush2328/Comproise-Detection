@@ -62,4 +62,87 @@ else
 fi
 
 echo "" >> $REPORT
+
+echo ""
+echo "================ ADDITIONAL SECURITY CHECKS ================" | tee -a $REPORT
+
+# -------------------------------
+# 1️⃣ Battery Percentage
+# -------------------------------
+echo "" | tee -a $REPORT
+echo "Battery Information:" | tee -a $REPORT
+
+BATTERY_LEVEL=$(adb shell dumpsys battery | grep level | awk '{print $2}')
+BATTERY_STATUS=$(adb shell dumpsys battery | grep status | awk '{print $2}')
+
+echo "[+] Battery Level: $BATTERY_LEVEL%" | tee -a $REPORT
+echo "[+] Battery Status Code: $BATTERY_STATUS" | tee -a $REPORT
+
+
+# -------------------------------
+# 2️⃣ VPN Detection
+# -------------------------------
+echo "" | tee -a $REPORT
+echo "VPN Status Check:" | tee -a $REPORT
+
+VPN_ACTIVE=$(adb shell dumpsys connectivity | grep -i "vpn" | grep -i "active")
+
+if [ -n "$VPN_ACTIVE" ]; then
+    echo "[!] VPN is ACTIVE on device" | tee -a $REPORT
+else
+    echo "[+] No active VPN detected" | tee -a $REPORT
+fi
+
+
+# -------------------------------
+# 3️⃣ IPv4 & IPv6 Address
+# -------------------------------
+echo "" | tee -a $REPORT
+echo "IP Address Information:" | tee -a $REPORT
+
+IP_INFO=$(adb shell ip addr show wlan0 2>/dev/null | grep inet)
+
+if [ -n "$IP_INFO" ]; then
+    echo "$IP_INFO" | tee -a $REPORT
+else
+    echo "[!] Wi-Fi interface not active or no IP found" | tee -a $REPORT
+fi
+
+
+# -------------------------------
+# 4️⃣ Camera Usage Detection (SAFE)
+# -------------------------------
+echo "" | tee -a $REPORT
+echo "Camera Usage Detection:" | tee -a $REPORT
+
+CAMERA_USAGE=$(adb shell appops get --uid CAMERA 2>/dev/null)
+
+if echo "$CAMERA_USAGE" | grep -qi "allow"; then
+    echo "[!] Camera was accessed recently" | tee -a $REPORT
+    echo "$CAMERA_USAGE" | tee -a $REPORT
+else
+    echo "[+] No recent camera access detected" | tee -a $REPORT
+fi
+
+
+# -------------------------------
+# 5️⃣ Screen Lock & Encryption Status
+# -------------------------------
+echo "" | tee -a $REPORT
+echo "Device Protection Status:" | tee -a $REPORT
+
+LOCK_STATUS=$(adb shell settings get secure lock_screen_lock_after_timeout)
+if [ "$LOCK_STATUS" = "null" ]; then
+    echo "[!] Screen lock NOT configured" | tee -a $REPORT
+else
+    echo "[+] Screen lock is enabled" | tee -a $REPORT
+fi
+
+ENCRYPTION_STATUS=$(adb shell getprop ro.crypto.state)
+if [ "$ENCRYPTION_STATUS" = "encrypted" ]; then
+    echo "[+] Device storage is encrypted" | tee -a $REPORT
+else
+    echo "[!] Device storage NOT encrypted" | tee -a $REPORT
+fi
+
 echo "Assessment completed successfully." | tee -a $REPORT
