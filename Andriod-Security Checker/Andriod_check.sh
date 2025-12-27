@@ -64,3 +64,7 @@ fi
 
 echo "" >> $REPORT
 echo "Assessment completed successfully." | tee -a $REPORT
+
+
+
+# change the mode of file to be execute this shell file
